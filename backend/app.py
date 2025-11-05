@@ -1,21 +1,12 @@
 from flask import Flask, jsonify, request
-from flask_mail import Mail, Message
 from flask_cors import CORS
 from dotenv import load_dotenv
+import requests
 import os
 
-load_dotenv()  # Load environment variables from .env file
+load_dotenv()
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
-
-# --- Configure Mail Settings ---
-app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
-app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT', 587))
-app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS', 'True') == 'True'
-app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
-
-mail = Mail(app)
+CORS(app)
 
 @app.route('/')
 def home():
@@ -25,38 +16,49 @@ def home():
 def form_data():
     try:
         data = request.form.to_dict()
-        
-        # Format email body
-        email_body = f"""
-        New Contact Form Submission
 
-        Name: {data.get('name', 'Not provided')}
-        Email: {data.get('email', 'Not provided')}
-        Phone: {data.get('phone', 'Not provided')}
-        Message: {data.get('message', 'Not provided')}
+        # Prepare email content
+        email_html = f"""
+        <h2>New Contact Form Submission</h2>
+        <p><strong>Name:</strong> {data.get('name', 'Not provided')}</p>
+        <p><strong>Email:</strong> {data.get('email', 'Not provided')}</p>
+        <p><strong>Phone:</strong> {data.get('phone', 'Not provided')}</p>
+        <p><strong>Message:</strong></p>
+        <p>{data.get('message', 'Not provided')}</p>
         """
-        
-        # Create email message
-        msg = Message(
-            subject='New Contact Form Submission - Hotel Shreegopal',
-            sender=app.config['MAIL_USERNAME'],
-            recipients=[os.getenv('RECEIVER_EMAIL')],
-            body=email_body
+
+        # Send email via Resend API
+        response = requests.post(
+            "https://api.resend.com/emails",
+            headers={
+                "Authorization": f"Bearer {os.getenv('RESEND_API_KEY')}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "from": "Hotel Shreegopal <onboarding@resend.dev>",
+                "to": [os.getenv("RECEIVER_EMAIL")],
+                "subject": "New Contact Form Submission - Hotel Shreegopal",
+                "html": email_html
+            }
         )
 
-        # Send email
-        mail.send(msg)
-
-        return jsonify({
-            "message": "Message sent successfully",
-            "status": "success",
-            "data": data
-        }), 200
+        if response.status_code == 200:
+            return jsonify({
+                "message": "Message sent successfully ✅",
+                "status": "success",
+                "data": data
+            }), 200
+        else:
+            return jsonify({
+                "message": "Failed to send email ❌",
+                "status": "error",
+                "details": response.text
+            }), 500
 
     except Exception as e:
         print(f"Error: {str(e)}")
         return jsonify({
-            "message": "Failed to send message",
+            "message": "Server error",
             "status": "error",
             "error": str(e)
         }), 500
