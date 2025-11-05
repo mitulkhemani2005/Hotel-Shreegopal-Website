@@ -17,6 +17,10 @@ app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 
 mail = Mail(app)
 
+@app.route('/')
+def home():
+    return jsonify({"status": "Server is running ✅"}), 200
+
 @app.route('/form/data', methods=['POST'])
 def form_data():
     try:
