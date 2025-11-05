@@ -208,17 +208,18 @@ export default function Home() {
         transition={{ duration: 0.6 }}
       >
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <motion.div
+          <motion.button
+            onClick={() => scrollToSection("home")}
             className="text-2xl font-serif font-bold text-amber-900"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             Shreegopal
-          </motion.div>
+          </motion.button>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex gap-8">
-            {["hero", "about", "rooms", "amenities", "location", "contact"].map((item) => (
+            {["home", "about", "rooms", "amenities", "location", "contact"].map((item) => (
               <motion.button
                 key={item}
                 onClick={() => scrollToSection(item)}
@@ -256,7 +257,7 @@ export default function Home() {
               transition={{ duration: 0.3 }}
             >
               <div className="flex flex-col gap-4 p-4">
-                {["hero", "about", "rooms", "amenities", "location", "contact"].map((item, idx) => (
+                {["home", "about", "rooms", "amenities", "location", "contact"].map((item, idx) => (
                   <motion.button
                     key={item}
                     onClick={() => scrollToSection(item)}
@@ -274,9 +275,9 @@ export default function Home() {
         </AnimatePresence>
       </motion.nav>
 
-      {/* Hero Section */}
+      {/* Home Section */}
       <section
-        id="hero"
+        id="home"
         className="pt-24 pb-16 min-h-screen flex items-center justify-center bg-gradient-to-b from-amber-50 to-white overflow-hidden"
       >
         <div className="max-w-7xl mx-auto px-4 w-full">
