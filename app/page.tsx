@@ -17,28 +17,28 @@ export default function Home() {
 
   const roomImages = {
     "Deluxe AC Room": [
-      "/luxury-deluxe-room-with-queen-bed.jpg",
-      "/deluxe-room-bathroom-amenities.jpg",
-      "/deluxe-room-city-view-window.jpg",
+      "/room1.JPG",
+      "/room2.jpg",
+      "/washroom1.jpg",
     ],
     "Standard AC Room": [
-      "/standard-ac-room-comfortable-bed.jpg",
-      "/standard-room-working-desk.jpg",
-      "/standard-room-bathroom.jpg",
+      "/room3.jpg",
+      "/room4.jpg",
+      "/washroom1.jpg",
     ],
     "Single AC Room": [
-      "/single-ac-room-compact-design.jpg",
-      "/single-room-bathroom-fixtures.jpg",
-      "/single-room-view.jpg",
+      "/nonac3.jpg",
+      "/nonac2.jpg",
+      "/nonac1.jpg",
     ],
   }
 
   const hotelImages = [
-    "/luxury-hotel-exterior-ujjain.jpg",
-    "/hotel-reception.png",
-    "/hotel-bedroom-luxury.jpg",
-    "/elegant-hotel-dining.png",
-    "/hotel-conference-hall.jpg",
+    "/front.JPG",
+    "/reception.JPG",
+    "/room2.jpg",
+    "/room1.JPG",
+    "/lobby.JPG",
   ]
 
   const roomTypes = [
