@@ -13,6 +13,7 @@ export default function Home() {
   const [roomImageIndex, setRoomImageIndex] = useState(0)
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" })
   const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const sectionsRef = useRef({})
 
   const roomImages = {
@@ -166,6 +167,7 @@ export default function Home() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault()
+    setIsSubmitting(true)
     
     try {
       const formDataToSend = new FormData()
@@ -192,6 +194,8 @@ export default function Home() {
       console.error('Error:', error)
       // Optionally show an error message to the user
       alert('Failed to send message. Please try again later.')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -878,11 +882,29 @@ export default function Home() {
               />
               <motion.button
                 type="submit"
-                className="w-full bg-amber-700 text-white py-3 rounded-lg font-semibold hover:bg-amber-800 transition-colors"
-                whileHover={{ scale: 1.02, boxShadow: "0 10px 20px rgba(0,0,0,0.2)" }}
-                whileTap={{ scale: 0.95 }}
+                disabled={isSubmitting}
+                className={`w-full bg-amber-700 text-white py-3 rounded-lg font-semibold transition-colors relative ${
+                  isSubmitting ? 'bg-amber-600 cursor-not-allowed' : 'hover:bg-amber-800'
+                }`}
+                whileHover={!isSubmitting ? { scale: 1.02, boxShadow: "0 10px 20px rgba(0,0,0,0.2)" } : {}}
+                whileTap={!isSubmitting ? { scale: 0.95 } : {}}
               >
-                Send Message
+                <span className={isSubmitting ? 'opacity-0' : 'opacity-100'}>
+                  Send Message
+                </span>
+                {isSubmitting && (
+                  <motion.div 
+                    className="absolute inset-0 flex items-center justify-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                  >
+                    <motion.div 
+                      className="w-6 h-6 border-3 border-white border-t-transparent rounded-full"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    />
+                  </motion.div>
+                )}
               </motion.button>
             </motion.form>
           </div>
