@@ -164,11 +164,35 @@ export default function Home() {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault()
-    setShowSuccessModal(true)
-    setFormData({ name: "", email: "", phone: "", message: "" })
-    setTimeout(() => setShowSuccessModal(false), 4000)
+    
+    try {
+      const formDataToSend = new FormData()
+      Object.entries(formData).forEach(([key, value]) => {
+        formDataToSend.append(key, value)
+      })
+
+      const response = await fetch('http://localhost:5000/form/data', {
+        method: 'POST',
+        body: formDataToSend,
+      })
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+
+      const result = await response.json()
+      console.log('Success:', result)
+      
+      setShowSuccessModal(true)
+      setFormData({ name: "", email: "", phone: "", message: "" })
+      setTimeout(() => setShowSuccessModal(false), 4000)
+    } catch (error) {
+      console.error('Error:', error)
+      // Optionally show an error message to the user
+      alert('Failed to send message. Please try again later.')
+    }
   }
 
   return (
