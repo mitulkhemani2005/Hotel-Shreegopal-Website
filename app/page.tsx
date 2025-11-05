@@ -175,7 +175,7 @@ export default function Home() {
         formDataToSend.append(key, value)
       })
 
-      const response = await fetch('http://localhost:5000/form/data', {
+        const response = await fetch('https://hotel-shreegopal-website-backend.onrender.com/form/data', {
         method: 'POST',
         body: formDataToSend,
       })
