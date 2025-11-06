@@ -168,31 +168,28 @@ export default function Home() {
   const handleFormSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
-    
     try {
       const formDataToSend = new FormData()
       Object.entries(formData).forEach(([key, value]) => {
         formDataToSend.append(key, value)
       })
 
-        const response = await fetch('https://hotel-shreegopal-website-backend.onrender.com/form/data', {
+      // Use the correct backend route for local development
+      const response = await fetch('http://127.0.0.1:5000/form/data', {
         method: 'POST',
         body: formDataToSend,
       })
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-
       const result = await response.json()
-      console.log('Success:', result)
-      
-      setShowSuccessModal(true)
-      setFormData({ name: "", email: "", phone: "", message: "" })
-      setTimeout(() => setShowSuccessModal(false), 4000)
+      if (response.ok && result.status === 'success') {
+        setShowSuccessModal(true)
+        setFormData({ name: '', email: '', phone: '', message: '' })
+        setTimeout(() => setShowSuccessModal(false), 4000)
+      } else {
+        throw new Error(result.message || 'Failed to send message')
+      }
     } catch (error) {
       console.error('Error:', error)
-      // Optionally show an error message to the user
       alert('Failed to send message. Please try again later.')
     } finally {
       setIsSubmitting(false)
