@@ -175,7 +175,12 @@ export default function Home() {
       })
 
       // Use the correct backend route for local development
-      const response = await fetch('http://127.0.0.1:5000/form/data', {
+      // const response = await fetch('http://127.0.0.1:5000/form/data', {
+      //   method: 'POST',
+      //   body: formDataToSend,
+      // })
+
+      const response = await fetch('https://hotel-shreegopal-website.onrender.com/form/data', {
         method: 'POST',
         body: formDataToSend,
       })
